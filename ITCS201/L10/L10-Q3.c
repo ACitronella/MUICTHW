@@ -1,15 +1,19 @@
 #include <stdio.h>
 
-
 int compute_gcd(int a, int b){
-  while(a != b){
-    if (a > b){
-      a = a - b;
+  if(a < b){
+      int temp = b;
+      b = a;
+      a = temp;
+  }
+  // with condition a > b
+  int k, r = -1;
+  while(r != 0){
+      k = a / b;
+      r = a % b;
     
-    }
-    else{
-      b = b - a;
-    }
+      a = b;
+      b = r;
   }
   return a;
 }
@@ -23,9 +27,10 @@ int main() {
   }
 
   int gcd = l[0];
-  for(int i = 0; i < n; i++){
+  for(int i = 1; i < n; i++){
     if(l[i] > 0){
-      gcd = compute_gcd(gcd, l[i]);
+      // this property is a key of the whole problem
+      gcd = compute_gcd(gcd, l[i]); 
     }
     else{
       gcd = 1;
