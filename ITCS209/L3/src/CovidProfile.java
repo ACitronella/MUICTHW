@@ -14,11 +14,11 @@ public class CovidProfile {
     }
     
     public CovidProfile(String _date, String loc, int noACC, int noCured, int noDeath) throws IllegalArgumentException{
+        if(noACC < 0 || noCured < 0 || noDeath < 0){
+            throw new IllegalArgumentException("Input noACC, noCured and noDeath argument must be non-negative integer.");
+        }
         this.date = _date;
         this.location = loc;
-        if(noACC < 0 || noCured < 0 || noDeath < 0){
-            throw new IllegalArgumentException("Input noACC, noCured and noDeath agruement must be non-negative integer.");
-        }
         this.accumulatedCases = noACC;
         this.curedCases = noCured;
         this.deathCases = noDeath;
