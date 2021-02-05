@@ -2,7 +2,7 @@ package src;
 
 public class CovidProfile {
 
-    private static int count = 0;
+    private static int count = 0; 
     private String date;
     private String location;
     private int accumulatedCases;
@@ -10,14 +10,9 @@ public class CovidProfile {
     private int deathCases;
 
     public CovidProfile(){
-        this.date = "none";
-        this.location = "none";
-        this.accumulatedCases = 0;
-        this.curedCases = 0;
-        this.deathCases = 0;
-        count++;
+        this("none", "none", 0, 0, 0);
     }
-
+    
     public CovidProfile(String _date, String loc, int noACC, int noCured, int noDeath) throws IllegalArgumentException{
         this.date = _date;
         this.location = loc;
@@ -47,9 +42,7 @@ public class CovidProfile {
         count++;
     }
     
-    public static int getCount(){
-        return count;
-    }
+
     public boolean isSevere(){
         return this.deathCases > 10000;
     }
@@ -59,10 +52,10 @@ public class CovidProfile {
         return this.accumulatedCases - this.curedCases - this.deathCases;
     }
 
+    // a bunch of getter
     public String getDate(){
         return this.date;
     }
-
     public String getLocation(){
         return this.location;
     }
@@ -75,7 +68,11 @@ public class CovidProfile {
     public int getDeathCases(){
         return this.deathCases;
     }
+    public static int getCount(){
+        return count;
+    }
 
+    // a bunch of setter
     public void setLocation(String loc){
         this.location = loc;
     }
@@ -88,12 +85,19 @@ public class CovidProfile {
     public void setDeathCases (int value){
         this.deathCases = value;
     }
+    // I don't think user should be able to modify of $count value
+
+
     public void printCovidInfo(){
+        printCovidInfo("\n");
+    }
+    
+    public void printCovidInfo(String end){
+        // give some flexible to user to control end string
         System.out.println(this.location + " at " + this.date);
         System.out.println("Accumulative Patient: " + this.accumulatedCases);
         System.out.println("Cursed Patient: "+ this.curedCases);
-        System.out.println("Death Case: " + this.deathCases);
+        System.out.println("Death Case: " + this.deathCases + end);
     }
-
     
 }
