@@ -1,0 +1,24 @@
+-------------------------------------------------------------------------------
+Test set: TestCase
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 5, Errors: 0, Skipped: 0, Time elapsed: 0.014 s <<< FAILURE! - in TestCase
+testLeapYear(TestCase)  Time elapsed: 0 s  <<< FAILURE!
+java.lang.AssertionError
+	at TestCase.testLeapYear(TestCase.java:20)
+
+testPreviousYear(TestCase)  Time elapsed: 0 s  <<< FAILURE!
+java.lang.AssertionError: expected:<28> but was:<29>
+	at TestCase.testPreviousYear(TestCase.java:256)
+
+testPreviousMonth(TestCase)  Time elapsed: 0 s  <<< FAILURE!
+java.lang.AssertionError: expected:<28> but was:<30>
+	at TestCase.testPreviousMonth(TestCase.java:211)
+
+testNextMonth(TestCase)  Time elapsed: 0 s  <<< FAILURE!
+java.lang.AssertionError: expected:<28> but was:<30>
+	at TestCase.testNextMonth(TestCase.java:92)
+
+testNextYear(TestCase)  Time elapsed: 0 s  <<< FAILURE!
+java.lang.AssertionError: expected:<28> but was:<29>
+	at TestCase.testNextYear(TestCase.java:137)
+
