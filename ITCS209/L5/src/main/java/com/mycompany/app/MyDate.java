@@ -1,6 +1,5 @@
 package com.mycompany.app;
 
-
 public class MyDate {
     private int year;
     private int month;
