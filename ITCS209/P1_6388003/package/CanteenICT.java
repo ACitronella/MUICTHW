@@ -1,6 +1,6 @@
-//Name:
-//ID:
-//Section:
+//Name: Phuriwat Angkoondittaphong
+//ID: 6388003
+//Section: 1
 
 import java.io.File;
 import java.io.FileWriter;
@@ -36,10 +36,54 @@ public class CanteenICT {
 	private List<FoodStall> foodStalls = new ArrayList<FoodStall>();	//List of the food stalls
 	private List<Table> tables = new ArrayList<Table>();				//List of the tables
 	//******************************************************************//
+
+	private boolean isAlreadyShiftEnterQueue; 
+	private boolean isAlreadyShiftMakeFoodQueue; 
+	private boolean isAlreadyShiftTableQueue; 
+
+
+	public List<Customer> getWaitToEnterQueue() {
+		return this.waitToEnterQueue;
+	}
+
+	public Customer topOfWaitEnterQueue(){
+		if(this.waitToEnterQueue.size() > 0){
+			return this.waitToEnterQueue.get(0);
+		}
+		return null;
+	} 
+
+	public Customer popTopOfWaitEnterQueue(){
+		return this.waitToEnterQueue.remove(0);
+	}
+
+	public boolean isAlreadyShiftEnterQueue(){
+		return this.isAlreadyShiftEnterQueue;
+	}
+
+	public void setIsAlreadyShiftEnterQueue(boolean b){
+		this.isAlreadyShiftEnterQueue = b;
+	}
 	
+	public List<FoodStall> getFoodStalls() {
+		return this.foodStalls;
+	}
+
+	public Customer topOfWaitSeatQueue(){
+		if(this.waitToSeatQueue.size() > 0){
+			return this.waitToSeatQueue.get(0);
+		}
+		return null;
+	}
+
+	public Customer popTopOfWaitSeatQueue(){
+		return this.waitToSeatQueue.remove(0);
+	}  
 	
-	
-	
+
+
+
+
 	/**
 	 * Compute the cost of building of all the food stalls. 
 	 * The building cost of a food stall is the sum of the installation cost of each food type that it sells.
@@ -50,10 +94,29 @@ public class CanteenICT {
 	{	
 		
 		//************************************** YOUR CODE HERE *********************************//
-		
-		
-	
-		return -1;
+		int sum = 0;
+		for(FoodStall stall: this.foodStalls){
+			List<FoodStall.Menu> menuList = stall.getMenu();
+			for(FoodStall.Menu type: menuList){
+				switch(type){
+					case NOODLES: sum += FoodStall.INSTALLATION_COST[0]; break;
+					case DESSERT: sum += FoodStall.INSTALLATION_COST[1]; break;
+					case MEAT:  sum += FoodStall.INSTALLATION_COST[2]; break;
+					case SALAD: sum += FoodStall.INSTALLATION_COST[3]; break;
+					case BEVERAGE: sum += FoodStall.INSTALLATION_COST[4]; break;
+				}
+			}
+		}
+		// // I try to do functional programming here but things go far beyond my understanding so i return to imparative approach
+		// IntStream installCost = Arrays.stream(FoodStall.INSTALLATION_COST);
+		// this.foodStalls.stream().flatMapToDouble(
+		// 	s -> s.getMenu().stream().mapToInt(
+		// 		menu -> {
+		// 			int cost = FoodStall.INSTALLATION_COST[menu.ordinal()];
+		// 		}
+		// 	) 
+		// );
+		return sum;
 		//**************************************************************************************//
 	}
 
@@ -67,12 +130,17 @@ public class CanteenICT {
 	//STUDENT
 	public boolean validateCanteen()
 	{
-
-		//************************************** YOUR CODE HERE *********************************//
-		
-
-
-		return false;
+		//************************************** YOUR CODE HERE *********************************//	
+		boolean isSellEverything = false;
+		for(FoodStall f: this.foodStalls){
+			if(f.getMenu().size() == FoodStall.INSTALLATION_COST.length){
+				isSellEverything = true;
+				break;
+			}
+		}
+		boolean isTableValid = this.tables.size() <= MAX_NUM_TABLES && this.tables.size() >= 1;
+		boolean isBudgetValid = this.getInstallCost() <= MAX_BUDGET;
+		return isBudgetValid && isTableValid && isSellEverything;
 		//**************************************************************************************//
 	}
 	
@@ -84,7 +152,9 @@ public class CanteenICT {
 	{
 		//******************************************** YOUR CODE HERE (IF ANY) *******************************//
 		
-		
+		this.isAlreadyShiftEnterQueue = false; 
+		this.isAlreadyShiftMakeFoodQueue = false; 
+		this.isAlreadyShiftTableQueue = false;  
 		
 		//****************************************************************************************************//
 	}
@@ -138,9 +208,22 @@ public class CanteenICT {
 			switch(ch)
 			{	case 'D': c = new Customer(this); break;
 				//******************************** YOUR CODE HERE (BONUS) ***********************************//
-			
-			
-			
+				case 'S': 
+					c = new Customer(this); 
+					c.customerType = Customer.CustomerType.STUDENT; 
+					break;
+				case 'P': 
+					c = new Customer(this); 
+					c.customerType = Customer.CustomerType.PROFESSOR; 
+					break;
+				case 'A': 
+					c = new Customer(this); 
+					c.customerType = Customer.CustomerType.ATHLETE; 
+					break;
+				case 'I': 
+					c = new Customer(this); 
+					c.customerType = Customer.CustomerType.ICTSTUDENT; 
+					break;
 				//******************************************************************************************//
 			}
 			if(c!=null)
@@ -423,12 +506,12 @@ public class CanteenICT {
 		try {
 			FileWriter fileWriter = new FileWriter(filename, true);
 			PrintWriter printWriter = new PrintWriter(fileWriter);
-		    printWriter.println(str); 
-		    printWriter.close();
+			printWriter.println(str); 
+			printWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    
+		
 	}
 	
 	//**************************************************************************************************//

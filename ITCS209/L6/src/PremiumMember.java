@@ -20,15 +20,16 @@ public class PremiumMember extends Member{
 
     @Override
     public void printMemberInfo(){
-        if(this.family.size() != 0){
-            System.out.println(String.format(PREMIUM_FORMAT, this.fee));
-            super.printMemberInfo();
+        System.out.println(String.format(PREMIUM_FORMAT, this.fee));
+        super.printMemberInfo();
+        if(this.family.size() > 0){
             System.out.println("---------------------\nList of Family");
             for(String person: family){
                 System.out.print(String.format("%s, ", person));
             }
             System.out.println();
         }
+        System.out.println("---------------------");
     }
 
     public boolean addFamily(String username){
@@ -56,7 +57,7 @@ public class PremiumMember extends Member{
     }
 
     public double getMonthlyBill(){
-        return this.fee + this.family.size() * Family_FEE;
+        return this.fee + Family_FEE;
     }
 
 }

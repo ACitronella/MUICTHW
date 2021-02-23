@@ -1,6 +1,6 @@
-//Name:
-//ID:
-//Section:
+//Name: Phuriwat Angkoondittaphong
+//ID: 6388003
+//Section: 1
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,7 +44,17 @@ public class FoodStall {
 		
 		this.orderTime = -1;
 	}
-		
+
+	public boolean enQueue(Customer c){
+		if(this.isQueueAble()){
+			return this.customerQueue.add(c);
+		}
+		return false;
+	}
+
+	public boolean isQueueAble(){
+		return this.customerQueue.size() < MAX_QUEUE;
+	}
 		
 	//************************************** DO NOT MODIFY ************************************************//
 	public String getName()

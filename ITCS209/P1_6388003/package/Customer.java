@@ -1,9 +1,10 @@
-//Name:
-//ID:
-//Section:
+//Name: Phuriwat Angkoondittaphong
+//ID: 6388003
+//Section: 1
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Customer {
 	
@@ -16,27 +17,61 @@ public class Customer {
 	protected List<FoodStall.Menu> requiredDishes = new ArrayList<FoodStall.Menu> ();	//List of required dishes
 	//*****************************************************************//
 	
-	
+
+	// will get this from FoodStall.COOKING_TIME and FoodStall.EAT_TIME combine
+	private int waitForMakeFood = 0;
+	private int waitForEating = 0;
+
 	
 	
 	Customer(CanteenICT _canteen)
 	{
 		//******************* YOUR CODE HERE **********************
-		
-		
+		this.canteen = _canteen; // love this dependency injection
+		this.customerID = customerRunningNumber; 
+		customerRunningNumber++;
 		//*****************************************************
 	}
-	
 	
 	
 	public void takeAction()
 	{
 		//************************** YOUR CODE HERE **********************//
-		
-		
+		// does not have to use .equals, when this become true, both must point to the same object
+
+		if(!this.canteen.isAlreadyShiftEnterQueue() && this == this.canteen.topOfWaitEnterQueue()){ 
+			this.actionForWaitEnterQueue();
+		}
+
+		else if(this == this.canteen.topOfWaitSeatQueue()){
+			
+		}
 		
 		//**************************************************************//
-		
+	}
+
+	public void actionForWaitEnterQueue(){
+		// everything involve with side effect
+		List<FoodStall> foodStallsList = this.canteen.getFoodStalls();
+		int minIndex = findMinAndValidQueue(foodStallsList, this.requiredDishes);
+		Customer changeQueue = this.canteen.popTopOfWaitEnterQueue();
+		foodStallsList.get(minIndex).enQueue(changeQueue);
+		this.canteen.setIsAlreadyShiftEnterQueue(true);
+	}
+
+	private static int findMinAndValidQueue(List<FoodStall> foodStallsList, List<FoodStall.Menu> requiredDishes){
+		int minIndex = 0;
+		for(int i = 0; i < foodStallsList.size(); i++){
+			FoodStall f = foodStallsList.get(i);
+			if(
+				f.isQueueAble()
+				&& f.getMenu().containsAll(requiredDishes) 
+				&& f.getCustomerQueue().size() < foodStallsList.get(minIndex).getCustomerQueue().size()
+			){
+				minIndex = i;
+			}
+		}
+		return minIndex;
 	}
 
 	//***************For hashing, equality checking, and general purposes. DO NOT MODIFY **************************//	

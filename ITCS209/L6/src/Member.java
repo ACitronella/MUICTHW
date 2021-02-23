@@ -25,8 +25,8 @@ public class Member {
 
     public boolean removeVideo(Video vdo){
         boolean isFound = false;
-        for(int i = 0; i < vdoList.size(); i++){
-            if(vdo.isEqual(vdoList.get(i))){
+        for(int i = 0; i < this.vdoList.size(); i++){
+            if(vdo.isEqual(this.vdoList.get(i))){
                 Video v = this.vdoList.remove(i);
                 System.out.println(String.format(DELETE_VIDEO_FORMAT, v.getTitle(), v.getURL()));
                 isFound = true;
@@ -39,7 +39,7 @@ public class Member {
     public void printMemberInfo(){
         System.out.println(String.format(PRINTING_FORMAT, this.email, this.password));
         for(int i = 0; i < this.vdoList.size(); i++){
-            Video vdo = vdoList.get(i);
+            Video vdo = this.vdoList.get(i);
             System.out.println(String.format(PRINTING_VIDEO_FORMAT, i+1, vdo.getTitle(), vdo.getURL()));
         }
     }

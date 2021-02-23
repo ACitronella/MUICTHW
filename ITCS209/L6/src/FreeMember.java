@@ -7,6 +7,7 @@ public class FreeMember extends Member {
     public FreeMember(String email, String password){
         super(email, password);
         this.numDownloadedVDO = 0;
+        
     }
     
     @Override
@@ -36,6 +37,7 @@ public class FreeMember extends Member {
     public void printMemberInfo(){
         System.out.println("---- FREE MEMBER ----");
         super.printMemberInfo();
+        System.out.println("---------------------");
     }
 
     public int getNumVideo(){
