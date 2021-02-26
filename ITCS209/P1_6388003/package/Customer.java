@@ -3,6 +3,7 @@
 //Section: 1
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -16,20 +17,22 @@ public class Customer {
 	protected CustomerType customerType = CustomerType.DEFAULT;	//the type of this customer, initialized with a DEFAULT customer.
 	protected List<FoodStall.Menu> requiredDishes = new ArrayList<FoodStall.Menu> ();	//List of required dishes
 	//*****************************************************************//
-	
 
-	// will get this from FoodStall.COOKING_TIME and FoodStall.EAT_TIME combine
-	private int waitForMakeFood = 0;
-	private int waitForEating = 0;
-
-	
+	private boolean isAlreadyOrder = false; 
+	private FoodStall stallQueuing = null;
+	private int eatTime = -1;
 	
 	Customer(CanteenICT _canteen)
 	{
 		//******************* YOUR CODE HERE **********************
-		this.canteen = _canteen; // love this dependency injection
+		this.canteen = _canteen; // is this dependency injection? sure it is.
 		this.customerID = customerRunningNumber; 
 		customerRunningNumber++;
+
+		// i have feeling that i have to edit this later on
+		this.requiredDishes = Arrays.asList(FoodStall.Menu.values());
+
+
 		//*****************************************************
 	}
 	
@@ -37,14 +40,54 @@ public class Customer {
 	public void takeAction()
 	{
 		//************************** YOUR CODE HERE **********************//
-		// does not have to use .equals, when this become true, both must point to the same object
-
-		if(!this.canteen.isAlreadyShiftEnterQueue() && this == this.canteen.topOfWaitEnterQueue()){ 
+		if(
+			!this.canteen.isAlreadyShiftEnterQueue()  // we can find a foodstall for a customer per a timestep only
+			&& this.canteen.isTopOfWaitEnterQueue(this) // ensure this instance is always at the top of enterQueue list.
+		){ 
+			// this part consider customer who at top of waiting queue and not update waiting queue yet
 			this.actionForWaitEnterQueue();
+		
 		}
-
-		else if(this == this.canteen.topOfWaitSeatQueue()){
+		else if(
+			this.stallQueuing != null 
+			&& this.stallQueuing.isTopOfMakingFoodQueue(this) // ensure this instance is always at the top of customerQueue list.
+			&& !this.isAlreadyOrder
+		){
+			// section for unordered customers
+			// ordering
+			this.stallQueuing.takeOrder(this.requiredDishes);
+			this.isAlreadyOrder = true;
+			this.stallQueuing.setActionComplete(true);
+		}
+		else if(
+			this.stallQueuing != null 
+			&& this.stallQueuing.isTopOfMakingFoodQueue(this)
+			&& this.stallQueuing.isReadyToServe()
+			&& this.isAlreadyOrder
 			
+		){
+			// remove from waiting food queue
+			this.stallQueuing.serve();
+
+			// add to queue table
+			this.stallQueuing.popTopOfCustomerQueue();
+			this.stallQueuing = null;
+			this.canteen.enQueueForSeat(this);
+			
+		}
+		else if(
+			this.canteen.isTopOfWaitSeatQueue(this) // ensure this instance is always at the top of seatQueue list.
+			&& !this.canteen.isAlreadyShiftTableQueue() // we can find a seat for a customer per a timestep only
+			&& this.canteen.getAreSeatsReady() 
+		){
+			// get table
+			this.canteen.setIsAlreadyShiftTableQueue(true); 
+			this.canteen.popTopOfWaitSeatQueue();
+			this.canteen.findASeat(this);
+			this.canteen.updateAreSeatsReady();
+
+			// set eating time
+			this.eatTime = FoodStall.calculateEatingTime(this.requiredDishes);
 		}
 		
 		//**************************************************************//
@@ -53,26 +96,36 @@ public class Customer {
 	public void actionForWaitEnterQueue(){
 		// everything involve with side effect
 		List<FoodStall> foodStallsList = this.canteen.getFoodStalls();
-		int minIndex = findMinAndValidQueue(foodStallsList, this.requiredDishes);
-		Customer changeQueue = this.canteen.popTopOfWaitEnterQueue();
-		foodStallsList.get(minIndex).enQueue(changeQueue);
-		this.canteen.setIsAlreadyShiftEnterQueue(true);
+		int minQueueIndex = this.findMinAndValidQueue(foodStallsList, this.requiredDishes);
+		if(minQueueIndex != -1){
+			Customer changeQueue = this.canteen.popTopOfWaitEnterQueue();
+			FoodStall f = foodStallsList.get(minQueueIndex);
+			f.enQueue(changeQueue);
+			this.stallQueuing = f;
+			this.canteen.setIsAlreadyShiftEnterQueue(true);
+		}
 	}
 
-	private static int findMinAndValidQueue(List<FoodStall> foodStallsList, List<FoodStall.Menu> requiredDishes){
+	private int findMinAndValidQueue(List<FoodStall> foodStallsList, List<FoodStall.Menu> requiredDishes){
 		int minIndex = 0;
+		boolean anyQueueAble = false;
 		for(int i = 0; i < foodStallsList.size(); i++){
 			FoodStall f = foodStallsList.get(i);
 			if(
 				f.isQueueAble()
 				&& f.getMenu().containsAll(requiredDishes) 
-				&& f.getCustomerQueue().size() < foodStallsList.get(minIndex).getCustomerQueue().size()
+				&& f.getCustomerQueue().size() <= foodStallsList.get(minIndex).getCustomerQueue().size()
 			){
 				minIndex = i;
+				anyQueueAble = true;
 			}
 		}
-		return minIndex;
+		if(anyQueueAble){
+			return minIndex;
+		}
+		return -1;
 	}
+
 
 	//***************For hashing, equality checking, and general purposes. DO NOT MODIFY **************************//	
 	

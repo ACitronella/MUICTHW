@@ -204,8 +204,8 @@ public class StudentTester {
 		
 		// testValidation();
 		// testOneWay();
-		testDebug();
-		//testSimple();
+		// testDebug();
+		testSimple();
 		//testCongestion();
 		//testLarge();
 		

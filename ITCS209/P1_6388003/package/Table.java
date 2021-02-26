@@ -16,6 +16,11 @@ public class Table {
 	
 	
 
+	public void haveASit(Customer c){
+		assert this.isFull();
+		this.seatedCustomers.add(c);
+	}
+
 	
 	//************************************ DO NOT MODIFY ****************************************//
 	/**

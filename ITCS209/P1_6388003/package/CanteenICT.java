@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class CanteenICT {
 
 	//*********************** DO NOT MODIFY ****************************//
@@ -38,24 +39,25 @@ public class CanteenICT {
 	//******************************************************************//
 
 	private boolean isAlreadyShiftEnterQueue; 
-	private boolean isAlreadyShiftMakeFoodQueue; 
 	private boolean isAlreadyShiftTableQueue; 
-
+	private boolean areSeatsReady = true;
 
 	public List<Customer> getWaitToEnterQueue() {
 		return this.waitToEnterQueue;
 	}
 
-	public Customer topOfWaitEnterQueue(){
+	public boolean isTopOfWaitEnterQueue(Customer c){
 		if(this.waitToEnterQueue.size() > 0){
-			return this.waitToEnterQueue.get(0);
+			return this.waitToEnterQueue.get(0) == c;
 		}
-		return null;
+		return false;
 	} 
 
 	public Customer popTopOfWaitEnterQueue(){
 		return this.waitToEnterQueue.remove(0);
 	}
+
+
 
 	public boolean isAlreadyShiftEnterQueue(){
 		return this.isAlreadyShiftEnterQueue;
@@ -64,16 +66,24 @@ public class CanteenICT {
 	public void setIsAlreadyShiftEnterQueue(boolean b){
 		this.isAlreadyShiftEnterQueue = b;
 	}
+
+
 	
-	public List<FoodStall> getFoodStalls() {
-		return this.foodStalls;
+	public boolean isAlreadyShiftTableQueue(){
+		return this.isAlreadyShiftTableQueue;
 	}
 
-	public Customer topOfWaitSeatQueue(){
+	public void setIsAlreadyShiftTableQueue(boolean b){
+		this.isAlreadyShiftTableQueue = b;
+	}
+
+
+
+	public boolean isTopOfWaitSeatQueue(Customer c){
 		if(this.waitToSeatQueue.size() > 0){
-			return this.waitToSeatQueue.get(0);
+			return this.waitToSeatQueue.get(0) == c;
 		}
-		return null;
+		return false;
 	}
 
 	public Customer popTopOfWaitSeatQueue(){
@@ -81,8 +91,43 @@ public class CanteenICT {
 	}  
 	
 
+	public boolean enQueueForSeat(Customer c){
+		return this.waitToSeatQueue.add(c);
+	}
 
 
+
+	public List<FoodStall> getFoodStalls() {
+		return this.foodStalls;
+	}
+
+	public List<Table> getTables(){
+		return this.tables;
+	}
+
+
+	public boolean getAreSeatsReady(){
+		return this.areSeatsReady;
+	}
+
+	public void updateAreSeatsReady(){
+		for(Table t: this.tables){
+			if(!t.isFull()){
+				this.areSeatsReady = true;
+				return;
+			}
+		}
+		this.areSeatsReady = false;
+	}
+
+	public void findASeat(Customer c){
+		for (Table t : this.getTables()) {
+			if(!t.isFull()){
+				t.haveASit(c);
+				break;
+			}
+		}
+	}
 
 	/**
 	 * Compute the cost of building of all the food stalls. 
@@ -107,12 +152,13 @@ public class CanteenICT {
 				}
 			}
 		}
-		// // I try to do functional programming here but things go far beyond my understanding so i return to imparative approach
+		// I try to do functional programming here but things go far beyond my understanding so i return to imparative approach
 		// IntStream installCost = Arrays.stream(FoodStall.INSTALLATION_COST);
 		// this.foodStalls.stream().flatMapToDouble(
 		// 	s -> s.getMenu().stream().mapToInt(
 		// 		menu -> {
 		// 			int cost = FoodStall.INSTALLATION_COST[menu.ordinal()];
+		// 			return cost;
 		// 		}
 		// 	) 
 		// );
@@ -153,8 +199,10 @@ public class CanteenICT {
 		//******************************************** YOUR CODE HERE (IF ANY) *******************************//
 		
 		this.isAlreadyShiftEnterQueue = false; 
-		this.isAlreadyShiftMakeFoodQueue = false; 
 		this.isAlreadyShiftTableQueue = false;  
+		for(FoodStall fs: this.foodStalls){
+			fs.setActionComplete(false);
+		}
 		
 		//****************************************************************************************************//
 	}

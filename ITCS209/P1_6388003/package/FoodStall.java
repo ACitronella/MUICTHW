@@ -24,7 +24,8 @@ public class FoodStall {
 	protected int orderTime = -1;	//internal reference when someone orders food
 	private int cookingTime = -1;	//internal reference to keep track of cooking time for the current order
 	//********************************************************************************//
-	
+
+	private boolean isActionComplete = false;
 	
 	/**
 	 * Constructor. Initializing name, canteen reference, and menu
@@ -54,6 +55,39 @@ public class FoodStall {
 
 	public boolean isQueueAble(){
 		return this.customerQueue.size() < MAX_QUEUE;
+	}
+
+	public boolean isTopOfMakingFoodQueue(Customer c){
+		if(this.customerQueue.size() > 0){
+			return this.customerQueue.get(0) == c;
+		}
+		return false;
+	}
+
+
+
+	public void popTopOfCustomerQueue(){
+		assert this.customerQueue.size() > 0;
+		System.out.println("poping " + this.customerQueue.get(0).getCode() + " from " + this.getName());
+		this.customerQueue.remove(0);
+	}
+
+	public static int calculateEatingTime(List<FoodStall.Menu> requiredDishes){
+		int time = 0;
+		for(FoodStall.Menu f: requiredDishes){
+			time += FoodStall.EAT_TIME[f.ordinal()];
+		}
+		return time;
+	}
+
+
+
+	public boolean isActionComplete(){
+		return this.isActionComplete;
+	}
+
+	public void setActionComplete(boolean b){
+		this.isActionComplete = b;
 	}
 		
 	//************************************** DO NOT MODIFY ************************************************//
