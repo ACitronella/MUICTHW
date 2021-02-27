@@ -20,7 +20,8 @@ public class Customer {
 
 	private boolean isAlreadyOrder = false; 
 	private FoodStall stallQueuing = null;
-	private int eatTime = -1;
+	private int expectToLeaveFromTable = -1;
+	private Table onThisTable = null;
 	
 	Customer(CanteenICT _canteen)
 	{
@@ -44,15 +45,17 @@ public class Customer {
 			!this.canteen.isAlreadyShiftEnterQueue()  // we can find a foodstall for a customer per a timestep only
 			&& this.canteen.isTopOfWaitEnterQueue(this) // ensure this instance is always at the top of enterQueue list.
 		){ 
+			
 			// this part consider customer who at top of waiting queue and not update waiting queue yet
 			this.actionForWaitEnterQueue();
-		
 		}
 		else if(
 			this.stallQueuing != null 
 			&& this.stallQueuing.isTopOfMakingFoodQueue(this) // ensure this instance is always at the top of customerQueue list.
 			&& !this.isAlreadyOrder
+			&& !this.stallQueuing.isActionComplete()
 		){
+			
 			// section for unordered customers
 			// ordering
 			this.stallQueuing.takeOrder(this.requiredDishes);
@@ -63,37 +66,48 @@ public class Customer {
 			this.stallQueuing != null 
 			&& this.stallQueuing.isTopOfMakingFoodQueue(this)
 			&& this.stallQueuing.isReadyToServe()
-			&& this.isAlreadyOrder
-			
+			// && this.isAlreadyOrder // unnessesary check
 		){
+			
 			// remove from waiting food queue
 			this.stallQueuing.serve();
 
 			// add to queue table
 			this.stallQueuing.popTopOfCustomerQueue();
+			this.stallQueuing.setActionComplete(true);
 			this.stallQueuing = null;
 			this.canteen.enQueueForSeat(this);
-			
 		}
 		else if(
 			this.canteen.isTopOfWaitSeatQueue(this) // ensure this instance is always at the top of seatQueue list.
 			&& !this.canteen.isAlreadyShiftTableQueue() // we can find a seat for a customer per a timestep only
 			&& this.canteen.getAreSeatsReady() 
 		){
+			
 			// get table
 			this.canteen.setIsAlreadyShiftTableQueue(true); 
 			this.canteen.popTopOfWaitSeatQueue();
-			this.canteen.findASeat(this);
-			this.canteen.updateAreSeatsReady();
+			this.onThisTable = this.canteen.findASeat(this);
+			
 
 			// set eating time
-			this.eatTime = FoodStall.calculateEatingTime(this.requiredDishes);
+			this.expectToLeaveFromTable = this.canteen.getCurrentTime() + FoodStall.calculateEatingTime(this.requiredDishes) + 1; 
+			// plus one since this instance will start to eat next timestep, i dont thinktit is cheating though
+		}
+		else if(
+			this.onThisTable != null // on table at any position
+			&& this.expectToLeaveFromTable == this.canteen.getCurrentTime() // is it time to get out
+		){
+			this.onThisTable.popFromTable(this);
+			this.onThisTable = null; // unnecessary
+			this.canteen.addToDoneQueue(this);
 		}
 		
 		//**************************************************************//
 	}
-
-	public void actionForWaitEnterQueue(){
+	
+	// other class should not involve with these twos methods
+	private void actionForWaitEnterQueue(){
 		// everything involve with side effect
 		List<FoodStall> foodStallsList = this.canteen.getFoodStalls();
 		int minQueueIndex = this.findMinAndValidQueue(foodStallsList, this.requiredDishes);
@@ -112,7 +126,7 @@ public class Customer {
 		for(int i = 0; i < foodStallsList.size(); i++){
 			FoodStall f = foodStallsList.get(i);
 			if(
-				f.isQueueAble()
+				f.getQueueAble()
 				&& f.getMenu().containsAll(requiredDishes) 
 				&& f.getCustomerQueue().size() <= foodStallsList.get(minIndex).getCustomerQueue().size()
 			){
@@ -125,6 +139,7 @@ public class Customer {
 		}
 		return -1;
 	}
+
 
 
 	//***************For hashing, equality checking, and general purposes. DO NOT MODIFY **************************//	

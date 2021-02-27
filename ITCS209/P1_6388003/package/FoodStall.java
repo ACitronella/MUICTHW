@@ -26,7 +26,8 @@ public class FoodStall {
 	//********************************************************************************//
 
 	private boolean isActionComplete = false;
-	
+	private boolean isQueueAble = true;
+
 	/**
 	 * Constructor. Initializing name, canteen reference, and menu
 	 * @param name
@@ -46,17 +47,21 @@ public class FoodStall {
 		this.orderTime = -1;
 	}
 
+	public boolean getQueueAble(){
+		return this.isQueueAble;
+	}
+
+	public void updateQueueAble(){
+		this.isQueueAble = this.customerQueue.size() < MAX_QUEUE;
+	}
+
 	public boolean enQueue(Customer c){
-		if(this.isQueueAble()){
+		if(this.getQueueAble()){
 			return this.customerQueue.add(c);
 		}
 		return false;
+	
 	}
-
-	public boolean isQueueAble(){
-		return this.customerQueue.size() < MAX_QUEUE;
-	}
-
 	public boolean isTopOfMakingFoodQueue(Customer c){
 		if(this.customerQueue.size() > 0){
 			return this.customerQueue.get(0) == c;
@@ -68,7 +73,7 @@ public class FoodStall {
 
 	public void popTopOfCustomerQueue(){
 		assert this.customerQueue.size() > 0;
-		System.out.println("poping " + this.customerQueue.get(0).getCode() + " from " + this.getName());
+		// System.out.println("poping " + this.customerQueue.get(0).getCode() + " from " + this.getName());
 		this.customerQueue.remove(0);
 	}
 

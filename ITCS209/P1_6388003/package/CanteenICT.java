@@ -120,13 +120,18 @@ public class CanteenICT {
 		this.areSeatsReady = false;
 	}
 
-	public void findASeat(Customer c){
+	public Table findASeat(Customer c){
 		for (Table t : this.getTables()) {
 			if(!t.isFull()){
 				t.haveASit(c);
-				break;
+				return t;
 			}
 		}
+		return null;
+	}
+
+	public void addToDoneQueue(Customer c){
+		this.doneQueue.add(c);
 	}
 
 	/**
@@ -197,12 +202,18 @@ public class CanteenICT {
 	private void preprocess()
 	{
 		//******************************************** YOUR CODE HERE (IF ANY) *******************************//
-		
+		// set flag variable to default state
 		this.isAlreadyShiftEnterQueue = false; 
 		this.isAlreadyShiftTableQueue = false;  
 		for(FoodStall fs: this.foodStalls){
 			fs.setActionComplete(false);
+			fs.updateQueueAble();
 		}
+
+		// update flag
+		this.updateAreSeatsReady();
+		
+		
 		
 		//****************************************************************************************************//
 	}
@@ -213,7 +224,6 @@ public class CanteenICT {
 	private void postprocess()
 	{
 		//******************************************** YOUR CODE HERE (IF ANY) *******************************//
-		
 		
 		
 		//****************************************************************************************************//

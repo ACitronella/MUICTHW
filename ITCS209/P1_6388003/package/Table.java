@@ -21,6 +21,10 @@ public class Table {
 		this.seatedCustomers.add(c);
 	}
 
+	public void popFromTable(Customer c){
+		this.seatedCustomers.remove(c);
+	}
+
 	
 	//************************************ DO NOT MODIFY ****************************************//
 	/**
