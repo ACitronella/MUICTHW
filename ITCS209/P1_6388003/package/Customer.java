@@ -18,6 +18,11 @@ public class Customer {
 	protected List<FoodStall.Menu> requiredDishes = new ArrayList<FoodStall.Menu> ();	//List of required dishes
 	//*****************************************************************//
 
+	private static List<FoodStall.Menu> defaultDishes = Arrays.asList(FoodStall.Menu.values());
+	private static List<FoodStall.Menu> studentDishes = Arrays.asList(new FoodStall.Menu[]{FoodStall.Menu.DESSERT, FoodStall.Menu.DESSERT, FoodStall.Menu.DESSERT, FoodStall.Menu.DESSERT, FoodStall.Menu.DESSERT});
+	private static List<FoodStall.Menu> professorDishes = Arrays.asList(new FoodStall.Menu[]{FoodStall.Menu.NOODLES, FoodStall.Menu.BEVERAGE});
+	private static List<FoodStall.Menu> athleteDishes = Arrays.asList(new FoodStall.Menu[]{FoodStall.Menu.MEAT, FoodStall.Menu.MEAT, FoodStall.Menu.MEAT, FoodStall.Menu.SALAD, FoodStall.Menu.BEVERAGE});
+
 	private boolean isAlreadyOrder = false; 
 	private FoodStall stallQueuing = null;
 	private int expectToLeaveFromTable = -1;
@@ -26,15 +31,41 @@ public class Customer {
 	Customer(CanteenICT _canteen)
 	{
 		//******************* YOUR CODE HERE **********************
+		this(_canteen, 'D');
+		//*****************************************************
+	}
+
+
+	public Customer(CanteenICT _canteen, char role){
 		this.canteen = _canteen; // is this dependency injection? sure it is.
 		this.customerID = customerRunningNumber; 
 		customerRunningNumber++;
 
-		// i have feeling that i have to edit this later on
-		this.requiredDishes = Arrays.asList(FoodStall.Menu.values());
-
-
-		//*****************************************************
+		switch(role)
+		{	
+			case 'D': 
+				this.customerType = Customer.CustomerType.DEFAULT;
+				this.requiredDishes = defaultDishes;
+				break;
+			case 'S': 
+				this.customerType = Customer.CustomerType.STUDENT;
+				this.requiredDishes = studentDishes;
+				break;
+			case 'P': 
+				this.customerType = Customer.CustomerType.PROFESSOR; 
+				this.requiredDishes = professorDishes;
+				break;
+			case 'A': 
+				this.customerType = Customer.CustomerType.ATHLETE; 
+				this.requiredDishes = athleteDishes;
+				break;
+			case 'I': 
+				this.customerType = Customer.CustomerType.ICTSTUDENT; 
+				this.requiredDishes = studentDishes;
+				break;
+			//******************************************************************************************//
+		}
+		
 	}
 	
 	
@@ -77,6 +108,18 @@ public class Customer {
 			this.stallQueuing.setActionComplete(true);
 			this.stallQueuing = null;
 			this.canteen.enQueueForSeat(this);
+			if(this instanceof ICTStudent){
+				this.expectToLeaveFromTable = this.getTimeToLeave(); 
+			}
+		}
+		else if(
+			this instanceof ICTStudent // only instance of ICTStudent
+			&& this.canteen.getWaitToEnterQueue().contains(this) // in waitingtable queue
+			&& this.expectToLeaveFromTable == this.canteen.getCurrentTime() // time to leave
+		){
+
+			this.canteen.popTopOfWaitSeatQueue(this);
+			this.canteen.addToDoneQueue(this);
 		}
 		else if(
 			this.canteen.isTopOfWaitSeatQueue(this) // ensure this instance is always at the top of seatQueue list.
@@ -88,11 +131,10 @@ public class Customer {
 			this.canteen.setIsAlreadyShiftTableQueue(true); 
 			this.canteen.popTopOfWaitSeatQueue();
 			this.onThisTable = this.canteen.findASeat(this);
-			
 
 			// set eating time
-			this.expectToLeaveFromTable = this.canteen.getCurrentTime() + FoodStall.calculateEatingTime(this.requiredDishes) + 1; 
-			// plus one since this instance will start to eat next timestep, i dont thinktit is cheating though
+			this.expectToLeaveFromTable = this.getTimeToLeave(); 
+			// plus one since this instance will start to eat next timestep, i dont think it is cheating though
 		}
 		else if(
 			this.onThisTable != null // on table at any position
@@ -104,6 +146,11 @@ public class Customer {
 		}
 		
 		//**************************************************************//
+	}
+
+
+	private int getTimeToLeave() {
+		return this.canteen.getCurrentTime() + FoodStall.calculateEatingTime(this.requiredDishes) + 1;
 	}
 	
 	// other class should not involve with these twos methods

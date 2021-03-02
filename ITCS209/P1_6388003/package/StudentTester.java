@@ -205,12 +205,12 @@ public class StudentTester {
 		// testValidation();
 		// testOneWay();
 		// testDebug();
-		testSimple();
+		// testSimple();
 		// testCongestion();
 		// testLarge();
 		
 		
-		//testBonus();	//For Bonus
+		testBonus();	//For Bonus
 	}
 
 }

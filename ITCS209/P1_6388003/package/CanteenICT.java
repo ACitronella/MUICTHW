@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Scanner;
 
 public class CanteenICT {
 
@@ -78,6 +79,9 @@ public class CanteenICT {
 	}
 
 
+	public List<Customer> getWaitToSeatQueue() {
+		return this.waitToSeatQueue;
+	}
 
 	public boolean isTopOfWaitSeatQueue(Customer c){
 		if(this.waitToSeatQueue.size() > 0){
@@ -87,9 +91,13 @@ public class CanteenICT {
 	}
 
 	public Customer popTopOfWaitSeatQueue(){
+		assert this.waitToEnterQueue.size() == 0;
 		return this.waitToSeatQueue.remove(0);
+	}
+
+	public void popTopOfWaitSeatQueue(Customer c){
+		this.waitToSeatQueue.remove(c);
 	}  
-	
 
 	public boolean enQueueForSeat(Customer c){
 		return this.waitToSeatQueue.add(c);
@@ -267,21 +275,16 @@ public class CanteenICT {
 			{	case 'D': c = new Customer(this); break;
 				//******************************** YOUR CODE HERE (BONUS) ***********************************//
 				case 'S': 
-					c = new Customer(this); 
-					c.customerType = Customer.CustomerType.STUDENT; 
-					break;
 				case 'P': 
-					c = new Customer(this); 
-					c.customerType = Customer.CustomerType.PROFESSOR; 
-					break;
 				case 'A': 
-					c = new Customer(this); 
-					c.customerType = Customer.CustomerType.ATHLETE; 
+					c = new Customer(this, ch); 
 					break;
 				case 'I': 
-					c = new Customer(this); 
-					c.customerType = Customer.CustomerType.ICTSTUDENT; 
+					// c = new Customer(this, ch);
+					c = new ICTStudent(this);
 					break;
+				default: 
+					
 				//******************************************************************************************//
 			}
 			if(c!=null)
@@ -431,7 +434,8 @@ public class CanteenICT {
 				System.out.println("@@@ Done simulation. Good bye. :)");
 				break;
 			}
-
+			
+			new Scanner(System.in).nextLine();
 		}
 		running = false;
 		log();
