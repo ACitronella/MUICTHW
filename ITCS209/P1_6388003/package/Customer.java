@@ -19,9 +19,6 @@ public class Customer {
 	//*****************************************************************//
 
 	private static List<FoodStall.Menu> defaultDishes = Arrays.asList(FoodStall.Menu.values());
-	private static List<FoodStall.Menu> studentDishes = Arrays.asList(new FoodStall.Menu[]{FoodStall.Menu.DESSERT, FoodStall.Menu.DESSERT, FoodStall.Menu.DESSERT, FoodStall.Menu.DESSERT, FoodStall.Menu.DESSERT});
-	private static List<FoodStall.Menu> professorDishes = Arrays.asList(new FoodStall.Menu[]{FoodStall.Menu.NOODLES, FoodStall.Menu.BEVERAGE});
-	private static List<FoodStall.Menu> athleteDishes = Arrays.asList(new FoodStall.Menu[]{FoodStall.Menu.MEAT, FoodStall.Menu.MEAT, FoodStall.Menu.MEAT, FoodStall.Menu.SALAD, FoodStall.Menu.BEVERAGE});
 
 	private boolean isAlreadyOrder = false; 
 	private FoodStall stallQueuing = null;
@@ -41,37 +38,39 @@ public class Customer {
 		this.customerID = customerRunningNumber; 
 		customerRunningNumber++;
 
-		switch(role)
-		{	
+		switch(role){	
 			case 'D': 
 				this.customerType = Customer.CustomerType.DEFAULT;
 				this.requiredDishes = defaultDishes;
 				break;
 			case 'S': 
 				this.customerType = Customer.CustomerType.STUDENT;
-				this.requiredDishes = studentDishes;
+				this.requiredDishes = Student.studentDishes;
 				break;
 			case 'P': 
 				this.customerType = Customer.CustomerType.PROFESSOR; 
-				this.requiredDishes = professorDishes;
+				this.requiredDishes = Professor.professorDishes;
 				break;
 			case 'A': 
 				this.customerType = Customer.CustomerType.ATHLETE; 
-				this.requiredDishes = athleteDishes;
+				this.requiredDishes = Athlete.athleteDishes;
 				break;
 			case 'I': 
 				this.customerType = Customer.CustomerType.ICTSTUDENT; 
-				this.requiredDishes = studentDishes;
+				this.requiredDishes = Student.studentDishes;
 				break;
-			//******************************************************************************************//
 		}
 		
 	}
 	
+
 	
 	public void takeAction()
 	{
 		//************************** YOUR CODE HERE **********************//
+		if(this instanceof ICTStudent){
+			System.out.println(this.getCode() + " : " + this.expectToLeaveFromTable);
+		}
 		if(
 			!this.canteen.isAlreadyShiftEnterQueue()  // we can find a foodstall for a customer per a timestep only
 			&& this.canteen.isTopOfWaitEnterQueue(this) // ensure this instance is always at the top of enterQueue list.

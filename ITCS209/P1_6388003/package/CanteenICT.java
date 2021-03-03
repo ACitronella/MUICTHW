@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Scanner;
+// import java.util.Scanner; // debugging purpose
 
 public class CanteenICT {
 
@@ -275,16 +275,19 @@ public class CanteenICT {
 			{	case 'D': c = new Customer(this); break;
 				//******************************** YOUR CODE HERE (BONUS) ***********************************//
 				case 'S': 
+					c = new Student(this);
+					break;
 				case 'P': 
+					c = new Professor(this);
+					break;
 				case 'A': 
-					c = new Customer(this, ch); 
+					c = new Athlete(this); 
 					break;
 				case 'I': 
-					// c = new Customer(this, ch);
 					c = new ICTStudent(this);
 					break;
 				default: 
-					
+					// continue to be null
 				//******************************************************************************************//
 			}
 			if(c!=null)
@@ -435,7 +438,7 @@ public class CanteenICT {
 				break;
 			}
 			
-			new Scanner(System.in).nextLine();
+			// new Scanner(System.in).nextLine(); // debugging purpose
 		}
 		running = false;
 		log();
