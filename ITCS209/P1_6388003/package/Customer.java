@@ -68,9 +68,6 @@ public class Customer {
 	public void takeAction()
 	{
 		//************************** YOUR CODE HERE **********************//
-		if(this instanceof ICTStudent){
-			System.out.println(this.getCode() + " : " + this.expectToLeaveFromTable);
-		}
 		if(
 			!this.canteen.isAlreadyShiftEnterQueue()  // we can find a foodstall for a customer per a timestep only
 			&& this.canteen.isTopOfWaitEnterQueue(this) // ensure this instance is always at the top of enterQueue list.
