@@ -14,7 +14,7 @@ public class Member {
         this.password = password;
         this.vdoList = new ArrayList<>();
     }
-
+    
     public boolean addVideo(Video vdo){
         if(vdo != null){
             this.vdoList.add(vdo);
@@ -43,5 +43,6 @@ public class Member {
             System.out.println(String.format(PRINTING_VIDEO_FORMAT, i+1, vdo.getTitle(), vdo.getURL()));
         }
     }
+    
 
 }
