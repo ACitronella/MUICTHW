@@ -1,0 +1,16 @@
+{
+  "name": "l07-q1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "L07-Sec1-6388003-q1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon L07-Sec1-6388003-q1.js"
+  },
+  "author": "Phuriwat Angkoondittaphong, Section 1, 6388003",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "nodemon": "^2.0.15"
+  }
+}

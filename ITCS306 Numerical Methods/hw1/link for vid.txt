@@ -1,0 +1,3 @@
+Link for explaination vid (~30 mins) (don't recommend): https://1drv.ms/v/s!AjwY99C3v4KLg7wb4K65hDJWJsF0ZA?e=f6dXFQ
+
+stopping criteria in `heron.py` 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6388003 Sec 1 Q1</title>
+</head>
+<body>
+    <div>
+        <form>
+            <fieldset>
+                <legend><h1>Registeration</h1></legend>
+                <label for="studentid">Student ID</label>
+                <input type="text" id="studentid" pattern="[0-9]{7}" title="#######" required  ><br>
+                
+                <label for="studentfname">First name</label>
+                <input type="text" id="studentfname" pattern="[A-Za-z]+" title="Alphabet only" required><br>
+                
+                <label for="studentlname">Last name</label>
+                <input type="text" id="studentlname" pattern="[A-Za-z]+" title="Alphabet only" required><br>
+                
+                <label for="studentbday" min="2018-01-01">Birthday</label>
+                <input type="date" id="studentbday" required><br>
+
+                <label for="gender">Gender:</label><br>
+                <input type="radio" id="gender" name="gender" value="IDK" checked>IDK
+                <input type="radio" id="gender" name="gender" value="F">Female
+                <input type="radio" id="gender" name="gender" value="M">Male <br>
+                
+                <label for="hobbies">Hobbies:</label><br>
+                <input type="checkbox" id="hobbies" name="hobbies" value="basketball">Basketball
+                <input type="checkbox" id="hobbies" name="hobbies" value="football">Football
+                <input type="checkbox" id="hobbies" name="hobbies" value="programming">Programming <br>
+                <input type="checkbox" id="hobbies" name="hobbies" value="photography">Photography
+                <input type="checkbox" id="hobbies" name="hobbies" value="gaming">Gaming <br>
+                
+                <input type="submit" value="Submit">
+                <input type="reset" value="Clear">
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>

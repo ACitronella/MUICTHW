@@ -1,0 +1,16 @@
+{
+  "name": "lab06-sec1-6388003-q2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "L06-Sec1-6388003-q2.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon L06-Sec1-6388003-q2.js"
+  },
+  "author": "Phuriwat Angkoondittaphong, Section 1, 6388003",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "nodemon": "^2.0.15"
+  }
+}

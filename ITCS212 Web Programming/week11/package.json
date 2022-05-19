@@ -1,0 +1,17 @@
+{
+  "name": "week11",
+  "version": "1.0.0",
+  "description": "",
+  "main": "StudentService.js",
+  "scripts": {
+    "start": "node StudentService.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3"
+  }
+}
